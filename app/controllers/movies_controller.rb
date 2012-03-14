@@ -34,6 +34,8 @@ end
       @@title_class = 'none'
       @@date_class = 'none'
     end
+    
+    @all_ratings = Movie.uniq.pluck(:rating)
   end
 
   def new
