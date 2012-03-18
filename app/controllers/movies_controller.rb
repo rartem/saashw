@@ -35,6 +35,16 @@ end
       @@date_class = 'none'
     end
     
+    if params[:commit] == "Refresh"
+      ratings = params[:ratings]
+      if ratings != nil
+        @movies = Movie.where(:rating => ratings.keys)
+      else
+        @movies = Movie.limit(0)
+      end
+      
+    end
+    
     @all_ratings = Movie.uniq.pluck(:rating)
   end
 
