@@ -21,31 +21,37 @@ end
   end
 
   def index
-    case params[:sort]
-    when "title"  then 
-      @movies = Movie.order('title asc').all
-      @@title_class = 'hilite'
-      @@date_class = 'none'
-    when "date" then 
-      @movies = Movie.order('release_date asc').all
-      @@title_class = 'none'
-      @@date_class = 'hilite'
-    else @movies = Movie.all
-      @@title_class = 'none'
-      @@date_class = 'none'
-    end
+    @movies = Movie
+    @all_ratings = Movie.uniq.pluck(:rating)
+    
     
     if params[:commit] == "Refresh"
       ratings = params[:ratings]
       if ratings != nil
-        @movies = Movie.where(:rating => ratings.keys)
+        @movies = @movies.where(:rating => ratings.keys)
       else
-        @movies = Movie.limit(0)
+        @movies = @movies.limit(0)
       end
-      
     end
     
-    @all_ratings = Movie.uniq.pluck(:rating)
+    case params[:sort]
+    when "title"  then 
+      @movies = @movies.order('title asc').all
+      @@title_class = 'hilite'
+      @@date_class = 'none'
+    when "date" then 
+      @movies = @movies.order('release_date asc').all
+      @@title_class = 'none'
+      @@date_class = 'hilite'
+    else
+      @movies = @movies.all 
+      @@title_class = 'none'
+      @@date_class = 'none'
+    end
+    
+    
+    
+    
   end
 
   def new

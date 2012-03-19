@@ -4,14 +4,14 @@
   Include: 
   - @all_ratings.each do |rating|
     = rating
-    = check_box_tag "ratings[#{rating}]"
-  = submit_tag 'Refresh'
+    = check_box_tag "ratings[#{rating}]", 1, if (params[:ratings]) then params[:ratings][rating] else false end
+  = submit_tag 'Refresh',  :id => 'ratings_submit'
 %table#movies
   %thead
     %tr
-      %th{:class => title_class}= link_to "Movie Title", {:action=>"index", :controller=>"movies", :sort=>"title"} , :id=>"title_header"
+      %th{:class => title_class}= link_to "Movie Title", params.merge({:action=>"index", :controller=>"movies", :sort=>"title"}) , :id=>"title_header"
       %th Rating
-      %th{:class => date_class}= link_to "Release Date", {:action=>"index", :controller=>"movies", :sort=>"date"} , :id=>"release_date_header"
+      %th{:class => date_class}= link_to "Release Date", params.merge({:action=>"index", :controller=>"movies", :sort=>"date"}) , :id=>"release_date_header"
       %th More Info
   %tbody
     - @movies.each do |movie|
