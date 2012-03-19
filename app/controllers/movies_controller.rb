@@ -23,6 +23,14 @@ end
   def index
     @movies = Movie
     @all_ratings = Movie.uniq.pluck(:rating)
+    @checked_ratings = []
+    
+    session.merge!(params)
+    params = session
+    
+    if params[:ratings]
+      @checked_ratings += params[:ratings].keys
+    end
     
     
     if params[:commit] == "Refresh"
