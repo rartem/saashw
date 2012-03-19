@@ -3,6 +3,12 @@ class MoviesController < ApplicationController
 helper_method :title_class
 helper_method :date_class
 
+before_filter :prepare_session
+
+def prepare_session
+  session[:storedparams] ||= Hash.new
+end
+
 def title_class
   return @@title_class
 end
@@ -21,14 +27,14 @@ end
   end
 
   def index
+    if params.count == 2 and session[:storedparams].count > 2 
+      redirect_to session[:storedparams]
+    end
     @movies = Movie
     @all_ratings = Movie.uniq.pluck(:rating)
     @checked_ratings = []
-    
-    if params.count == 2
-      session.clear
-    end
-    session.merge!(params)
+       
+    session[:storedparams].merge!(params)
     
     if params[:ratings]
       @checked_ratings += params[:ratings].keys
@@ -66,12 +72,13 @@ end
 
   def new
     # default: render 'new' template
+    
   end
 
   def create
     @movie = Movie.create!(params[:movie])
     flash[:notice] = "#{@movie.title} was successfully created."
-    redirect_to session.merge({:action=>"index", :controller=>"movies"}).select{|k,v| k != :confirm and k != "_csrf_token" and k != "session_id" and k != "flash"}
+    redirect_to session[:storedparams].merge({:action=>"index", :controller=>"movies"})
   end
 
   def edit
@@ -89,7 +96,7 @@ end
     @movie = Movie.find(params[:id])
     @movie.destroy
     flash[:notice] = "Movie '#{@movie.title}' deleted."
-    redirect_to session.merge({:action=>"index", :controller=>"movies"}).select{|k,v| k != :confirm and k != "_csrf_token" and k != "session_id" and k != "flash"}
+    redirect_to session[:storedparams].merge({:action=>"index", :controller=>"movies"})
   end
 
 end
