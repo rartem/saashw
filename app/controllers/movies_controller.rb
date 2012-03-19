@@ -71,7 +71,7 @@ end
   def create
     @movie = Movie.create!(params[:movie])
     flash[:notice] = "#{@movie.title} was successfully created."
-    redirect_to session.merge({:action=>"index", :controller=>"movies"}).select{|k,v| k != :confirm and k != "_csrf_token" and k != "session_id"}
+    redirect_to session.merge({:action=>"index", :controller=>"movies"}).select{|k,v| k != :confirm and k != "_csrf_token" and k != "session_id" and k != "flash"}
   end
 
   def edit
@@ -89,7 +89,7 @@ end
     @movie = Movie.find(params[:id])
     @movie.destroy
     flash[:notice] = "Movie '#{@movie.title}' deleted."
-    redirect_to session.merge({:action=>"index", :controller=>"movies"}).select{|k,v| k != :confirm and k != "_csrf_token" and k != "session_id"}
+    redirect_to session.merge({:action=>"index", :controller=>"movies"}).select{|k,v| k != :confirm and k != "_csrf_token" and k != "session_id" and k != "flash"}
   end
 
 end
